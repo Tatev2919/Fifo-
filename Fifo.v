@@ -23,13 +23,14 @@ always @(posedge clk or negedge rst) begin
 		full <= 1'b0;
 	end
 	else begin
-		write_r <= write;
 		if(write) begin
+			write_r <= write;
 			empty <= 1'b0;
 			if(!full) 
 				write_pointer <= write_pointer + 1;
 			if(write_pointer == read_pointer ) begin
-				full <= 1'b1;	
+				if(write&~write_r)
+					full <= 1'b1;	
 			end
 		end
 		else if (read) begin

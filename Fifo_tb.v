@@ -19,6 +19,8 @@ integer i;
 initial begin
 	clk = 1; 
 	rst = 1;
+	write = 0;
+	read = 0;
 	#18;
 	rst = 0;
 	write = 1'b1;
@@ -30,6 +32,15 @@ initial begin
 	write = 1'b0;
 	read = 1'b1;
 //	wait(full);
+	#100;
+	read = 1'b0;
+	write = 1'b1;
+	data_in = 8'd2;
+	for (i = 0 ; i < 2**ad_w+10; i = i+1) begin	
+       		@(posedge clk) data_in = data_in + 8'd2;
+	end
+	#25;
+	read = 1'b1;
 	#100;
 	read = 1'b0;
 	#200;
