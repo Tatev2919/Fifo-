@@ -5,10 +5,10 @@ module fifo #
   parameter ad_width = 4'd4)
 (clk,rst,write,read,full,empty,data_in,data_out);
 
-input  clk,rst,write,read;
-input  [data_width-1:0] data_in;
-output [data_width-1:0] data_out;
-output reg full,empty;
+input                       clk,rst,write,read;
+input      [data_width-1:0] data_in;
+output     [data_width-1:0] data_out;
+output reg                  full,empty;
 
 reg [ad_width-1:0] read_pointer,write_pointer;
 
@@ -31,19 +31,16 @@ always @(*) begin
 
 end
 
-always @(posedge clk) begin  
-	write_r <= write;
-	read_r <= read;
-	ex_reg_w <= write_r;
-	ex_reg_r <= read_r;
-end
-
-always @(posedge clk or negedge rst) begin 
+always @(posedge clk or posedge rst) begin 
 	if(rst) begin
 		read_pointer <= 1'b0;
 		write_pointer <= 1'b0;
 	end
 	else begin
+		write_r <= write;
+		read_r <= read;
+		ex_reg_w <= write_r;
+		ex_reg_r <= read_r;
 		if(write_r) begin
 			if(!full) 
 				write_pointer <= write_pointer + 1;
