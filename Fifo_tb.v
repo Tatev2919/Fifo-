@@ -41,6 +41,9 @@ initial begin
 		@(posedge clk);
 	read = 1'b0;
 	#200;
+	read = 1'b1;
+	write = 1'b1;
+	#200;
 	$finish;
 end
 
