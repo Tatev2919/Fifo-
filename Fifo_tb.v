@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module fifo_tb;
 
 parameter ad_w = 4'd4;
@@ -20,13 +22,16 @@ initial begin
 	clk = 1'b1; 
 	rst = 1'b1;
 	read = 1'b0;
-	data_in = 0;
+	data_in = 8'b0;
 	#18;
 	rst = 1'b0;
 	read = 1'b0;
 	write = 1'b1;
+	repeat (32) begin	
+		@(posedge clk) #10 read = ~read;write = ~write;
+	end
 	while (!full) begin 
-		@(posedge clk) data_in = data_in + 1;
+		@(posedge clk) data_in = data_in + 8'b1;
 	end
 	#200;
 	write = 1'b0;
@@ -34,15 +39,14 @@ initial begin
 	repeat (6) begin	
 		@(posedge clk) #10 read = ~read;write = ~write;
 	end
-	#150;
-       	write = 1'b0;read = 1'b1;	
+	#15;
+    write = 1'b0;read = 1'b1;	
 	#100;
-	while (!empty)
-		@(posedge clk);
+	while (!empty)	@(posedge clk);
 	read = 1'b0;
 	#200;
 	read = 1'b1;
-	write = 1'b1;
+	write = 1'b0;
 	#200;
 	$finish;
 end
